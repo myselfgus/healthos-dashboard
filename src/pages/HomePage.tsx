@@ -5,19 +5,20 @@ import { useAppStore, TabId } from '@/lib/store';
 import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { PatientsView } from '@/components/patients/PatientsView';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
   return (
-    <button onClick={toggleTheme} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed active:translate-y-0">
+    <Button onClick={toggleTheme} variant="ghost" size="icon">
       {isDark ? <Sun size={20} /> : <Moon size={20} />}
-    </button>
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   );
 };
 const HeaderButton = ({ icon: Icon, onClick }: { icon: React.ElementType, onClick: () => void }) => (
-  <button onClick={onClick} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed active:translate-y-0">
+  <Button onClick={onClick} variant="ghost" size="icon">
     <Icon size={20} />
-  </button>
+  </Button>
 );
 const viewTitles: Record<TabId, string> = {
   dashboard: 'Visão Geral do Sistema',
@@ -46,23 +47,23 @@ export function HomePage() {
     }
   };
   return (
-    <div className="flex h-screen bg-[var(--app-bg)] text-[var(--text-main)] overflow-hidden font-sans">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
       <AppSidebar />
-      <main className="flex-1 flex flex-col min-w-0 p-6 pl-0">
-        <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2">
+      <main className="flex-1 flex flex-col min-w-0">
+        <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2 px-6 border-b">
           <div>
-            <h2 className="text-2xl font-bold text-petrol tracking-tight">
+            <h2 className="text-2xl font-bold text-foreground tracking-tight">
               {viewTitles[activeTab] || 'AuraDash'}
             </h2>
             <p className="text-sm text-muted-foreground mt-1">Bem-vindo ao MedScribe HealthOS</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-2">
             <HeaderButton icon={AlertCircle} onClick={() => addLog("Sistema auditado manualmente.")} />
             <HeaderButton icon={UploadCloud} onClick={() => addLog("Sincronização com nuvem iniciada.")} />
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex-1 overflow-hidden relative">
+        <div className="flex-1 overflow-auto p-6">
           {renderContent()}
         </div>
       </main>

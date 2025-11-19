@@ -101,8 +101,8 @@ export default {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
-            petrol: 'var(--petrol)',
-            moss: 'var(--moss)',
+            petrol: 'hsl(var(--primary))',
+            moss: 'hsl(var(--accent))',
   			border: 'hsl(var(--border))',
   			ring: 'hsl(var(--ring))',
   			card: {
@@ -150,10 +150,6 @@ export default {
   			'glow-lg': '0 0 40px -10px rgba(99, 102, 241, 0.3)',
   			primary: '0 0 20px -5px hsl(var(--primary) / 0.4)',
   			glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-            'neu': '9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light)',
-            'neu-sm': '6px 6px 10px var(--shadow-dark), -6px -6px 10px var(--shadow-light)',
-            'neu-inset': 'inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light)',
-            'neu-pressed': 'inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light)',
   		},
   		keyframes: {
   			'fade-in': {

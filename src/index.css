@@ -3,63 +3,47 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 210 20% 98%; /* #f5f7fa */
-    --foreground: 168 100% 15%; /* #004d40 */
-    --primary: 168 100% 15%;
-    --primary-foreground: 0 0% 98%;
-    --muted: 210 20% 90%;
-    --muted-foreground: 210 10% 40%;
-    --border: 210 20% 85%;
-    --ring: 168 100% 15%;
-    --card: 210 20% 98%;
-    --card-foreground: 168 100% 15%;
-    --popover: 210 20% 98%;
-    --popover-foreground: 168 100% 15%;
-    --secondary: 210 20% 90%;
-    --secondary-foreground: 168 100% 15%;
-    --accent: 210 20% 90%;
-    --accent-foreground: 168 100% 15%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 165 100% 15%; /* petrol */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 82 39% 95%; /* moss-light */
+    --accent-foreground: 82 39% 20%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --input: 210 20% 85%;
-    --radius: 1rem;
-    /* Neumorphic Theme */
-    --app-bg: #e0e5ec;
-    --text-main: #004d40;
-    --text-muted: #5f7d7a;
-    --petrol: #004d40;
-    --moss: #556B2F;
-    --shadow-light: #ffffff;
-    --shadow-dark: #a3b1c6;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 165 100% 15%;
+    --radius: 0.75rem;
   }
   .dark {
-    --background: 222 47% 11%; /* #111827 */
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --border: 217 33% 17%;
-    --ring: 210 40% 98%;
-    --card: 222 47% 11%;
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --secondary: 217 33% 17%;
+    --primary: 165 80% 60%; /* petrol-light */
+    --primary-foreground: 165 100% 15%;
+    --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 82 39% 17.5%; /* moss-dark */
+    --accent-foreground: 82 39% 90%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --input: 217 33% 17%;
-    /* Neumorphic Theme */
-    --app-bg: #1a202c;
-    --text-main: #a0aec0;
-    --text-muted: #718096;
-    --petrol: #4fd1c5;
-    --moss: #9ae6b4;
-    --shadow-light: #2d3748;
-    --shadow-dark: #11151c;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 165 80% 60%;
   }
   * {
     @apply border-border;
@@ -70,7 +54,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    @apply bg-[var(--app-bg)] text-[var(--text-main)];
+    @apply bg-background text-foreground;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     text-rendering: optimizeLegibility;
     font-family: 'Inter', sans-serif;
@@ -82,10 +66,6 @@
     background: transparent;
   }
   .custom-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 77, 64, 0.2);
-    border-radius: 20px;
-  }
-  .dark .custom-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(160, 174, 192, 0.2);
+    @apply bg-border rounded-full;
   }
 }
