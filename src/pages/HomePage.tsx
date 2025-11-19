@@ -35,7 +35,7 @@ const PlaceholderView = ({ title }: { title: string }) => (
 );
 export function HomePage() {
   const activeTab = useAppStore(s => s.activeTab);
-  const addLog = useAppStore(s => s.addLog);
+  const addChatMessage = useAppStore(s => s.addChatMessage);
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -58,8 +58,8 @@ export function HomePage() {
             <p className="text-sm text-muted-foreground mt-1">Bem-vindo ao MedScribe HealthOS</p>
           </div>
           <div className="flex items-center gap-2">
-            <HeaderButton icon={AlertCircle} onClick={() => addLog("Sistema auditado manualmente.")} />
-            <HeaderButton icon={UploadCloud} onClick={() => addLog("Sincronização com nuvem iniciada.")} />
+            <HeaderButton icon={AlertCircle} onClick={() => addChatMessage({role: 'system', content: "Auditoria manual do sistema solicitada."})} />
+            <HeaderButton icon={UploadCloud} onClick={() => addChatMessage({role: 'system', content: "Sincronização com a nuvem iniciada."})} />
             <ThemeToggle />
           </div>
         </header>
