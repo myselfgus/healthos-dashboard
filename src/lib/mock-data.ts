@@ -1,11 +1,12 @@
 import { Users, Mic, FileText, Brain, FolderOpen, Activity, Network, ShieldCheck, LucideIcon } from 'lucide-react';
+import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
 export const generateLogs = (action: string): string[] => {
   const timestamp = new Date().toLocaleTimeString();
   return [
     `[${timestamp}] INICIANDO: ${action}...`,
-    `[${timestamp}] VERIFICANDO: Configura��ões de ambiente carregadas.`,
+    `[${timestamp}] VERIFICANDO: Configurações de ambiente carregadas.`,
     `[${timestamp}] CONEXÃO: Voither HealthOS Gateway [OK]`,
-    `[${timestamp}] MODELO: Carregando par��metros...`,
+    `[${timestamp}] MODELO: Carregando parâmetros...`,
     `[${timestamp}] PROCESSANDO: Aguardando resposta do pipeline...`,
   ];
 };
@@ -21,7 +22,7 @@ export const mockAgents: { id: string; title: string; desc: string; icon: Lucide
     { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0', status: 'online' },
     { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, conferência e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO', status: 'online' },
     { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET', status: 'busy' },
-    { id: 'dim', title: 'Dimensional (��)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
+    { id: 'dim', title: 'Dimensional (M)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
     { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH', status: 'offline' },
     { id: 'anon', title: 'Anonimizar', desc: 'Pipeline de segurança para remover PII de transcrições e análises antes do upload.', icon: ShieldCheck, tag: 'PRIVACY', status: 'online' },
 ];
@@ -31,34 +32,70 @@ export const mockAppointments = [
     { patient: 'Paciente 1002', time: '14:00', date: 'Amanhã' },
     { patient: 'Paciente 1006', time: '11:00', date: '25/07' },
 ];
-export const generateAiResponse = (userInput: string): string => {
+export const generateAiResponse = (userInput: string): { content: string; uiComponent?: GenUIComponent } => {
   const lowerInput = userInput.toLowerCase();
   const patientMatch = lowerInput.match(/paciente (\d+)/);
   if (patientMatch && patientMatch[1]) {
     const patientId = parseInt(patientMatch[1], 10);
     const patient = mockPatients.find(p => p.name.includes(patientId.toString()));
     if (patient) {
-      return `Resumo do ${patient.name}:\n- Status: ${patient.status}\n- Transcrições: ${patient.transcriptions}\n- Análises: ${patient.analyses}\n- Última atualização: ${patient.lastUpdate}`;
+      return {
+        content: `Claro, aqui está um resumo para o ${patient.name}.`,
+        uiComponent: {
+          type: 'patient_summary',
+          data: {
+            name: patient.name,
+            id: `P${patient.id.toString().padStart(4, '0')}`,
+            lastUpdate: patient.lastUpdate,
+            status: patient.status,
+            metrics: [
+              { label: 'Transcrições', value: patient.transcriptions },
+              { label: 'Análises ASL', value: patient.analyses },
+            ],
+          },
+        },
+      };
     } else {
-      return `Paciente com ID ${patientId} não encontrado.`;
+      return { content: `Paciente com ID ${patientId} não encontrado.` };
     }
   }
-  if (lowerInput.includes('pacientes')) {
-    return `Atualmente, existem ${mockPatients.length} pacientes no sistema. ${mockPatients.filter(p => p.status === 'ATIVO').length} estão ativos. Você pode visualizar todos na aba "Pacientes".`;
+  if (lowerInput.includes('plano de ação') || lowerInput.includes('recomendações')) {
+    return {
+      content: "Com base na última análise, gerei o seguinte plano de ação para o Paciente 1001:",
+      uiComponent: {
+        type: 'action_plan',
+        data: {
+          title: 'Plano de Ação - Paciente 1001',
+          steps: [
+            { id: '1', description: 'Agendar sessão de acompanhamento', completed: false },
+            { id: '2', description: 'Revisar resultados da análise dimensional', completed: true },
+            { id: '3', description: 'Preparar relatório para o paciente', completed: false },
+          ],
+        },
+      },
+    };
   }
-  if (lowerInput.includes('transcrever') || lowerInput.includes('audio')) {
-    return "Para iniciar uma nova transcrição, você pode usar o 'Executor de Agentes' e selecionar 'Transcrever Áudio'. O sistema processará os arquivos da pasta `/audio`.";
+  if (lowerInput.includes('vitais') || lowerInput.includes('histórico')) {
+    return {
+      content: "Aqui está o histórico de engajamento do Paciente 1003 nas últimas semanas:",
+      uiComponent: {
+        type: 'vitals_chart',
+        data: {
+          title: 'Engajamento Semanal',
+          data: [
+            { name: 'Semana 1', value: 65 },
+            { name: 'Semana 2', value: 70 },
+            { name: 'Semana 3', value: 85 },
+            { name: 'Semana 4', value: 80 },
+          ],
+        },
+      },
+    };
   }
   if (lowerInput.includes('ajuda') || lowerInput.includes('comandos')) {
-    return "Comandos disponíveis:\n- `listar pacientes`: Mostra um resumo dos pacientes.\n- `status do sistema`: Verifica a saúde dos serviços.\n- `iniciar transcrição`: Dicas sobre como transcrever áudios.\n- `paciente [ID]`: Mostra um resumo de um paciente específico (ex: `paciente 1001`).";
+    return { content: "Comandos disponíveis:\n- `paciente [ID]`: Mostra um resumo de um paciente (ex: `paciente 1001`).\n- `plano de ação`: Gera um plano de ação de exemplo.\n- `histórico de vitais`: Mostra um gráfico de exemplo." };
   }
-  if (lowerInput.includes('status')) {
-    return "Todos os sistemas estão operacionais. A conexão com o MongoDB Atlas está estável e o pipeline de análise está pronto para receber novas tarefas.";
-  }
-  if (lowerInput.includes('análise') || lowerInput.includes('asl')) {
-    return "A última Análise Sistêmica Linguística (ASL) foi concluída para o Paciente 1006 há 2 dias. 98% de todas as transcrições foram processadas com sucesso.";
-  }
-  return "Desculpe, não entendi o comando. Digite `ajuda` para ver uma lista de comandos que eu conheço.";
+  return { content: "Desculpe, não entendi o comando. Digite `ajuda` para ver uma lista de comandos que eu conheço." };
 };
 export const mockFiles = [
   { id: '1', name: 'Paciente 1001', type: 'folder', size: '--', lastModified: '2024-05-20 09:00 AM' },

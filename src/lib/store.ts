@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import { generateLogs, generateAiResponse } from '@/lib/mock-data';
 import { v4 as uuidv4 } from 'uuid';
+import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
 export type TabId = 'dashboard' | 'patients' | 'files' | 'settings' | 'ai-assistant' | string;
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  uiComponent?: GenUIComponent;
 }
 interface AppState {
   activeTab: TabId;
@@ -37,8 +39,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     get().addChatMessage(userMessage);
     set({ isAiThinking: true });
     setTimeout(() => {
-      const aiResponseContent = generateAiResponse(content);
-      const aiMessage: Omit<Message, 'id'> = { role: 'assistant', content: aiResponseContent };
+      const aiResponse = generateAiResponse(content);
+      const aiMessage: Omit<Message, 'id'> = { 
+        role: 'assistant', 
+        content: aiResponse.content,
+        uiComponent: aiResponse.uiComponent,
+      };
       get().addChatMessage(aiMessage);
       set({ isAiThinking: false });
     }, 1200);
