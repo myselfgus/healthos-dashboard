@@ -5,6 +5,7 @@ import { useAppStore, TabId } from '@/lib/store';
 import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { PatientsView } from '@/components/patients/PatientsView';
+import { FilesView } from '@/components/files/FilesView';
 import { Button } from '@/components/ui/button';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -42,6 +43,8 @@ export function HomePage() {
         return <DashboardView />;
       case 'patients':
         return <PatientsView />;
+      case 'files':
+        return <FilesView />;
       default:
         return <PlaceholderView title={viewTitles[activeTab] || 'Página'} />;
     }
