@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { PatientsView } from '@/components/patients/PatientsView';
 import { FilesView } from '@/components/files/FilesView';
+import { SettingsView } from '@/components/settings/SettingsView';
 import { Button } from '@/components/ui/button';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -45,6 +46,8 @@ export function HomePage() {
         return <PatientsView />;
       case 'files':
         return <FilesView />;
+      case 'settings':
+        return <SettingsView />;
       default:
         return <PlaceholderView title={viewTitles[activeTab] || 'Página'} />;
     }
