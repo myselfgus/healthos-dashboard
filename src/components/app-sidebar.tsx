@@ -5,8 +5,9 @@ import {
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";interface Tab {id?: string | number;[key: string]: unknown;
-}interface active {id?: string | number;[key: string]: unknown;}const Logo = () =>
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const Logo = () =>
 <div className="flex flex-col items-center p-6 select-none">
     <div className="relative w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full border-4 border-background">
       <div className="z-10 text-primary font-bold text-3xl tracking-wider">V</div>
@@ -47,7 +48,7 @@ export function AppSidebar(): JSX.Element {
       <div className="flex-1 overflow-y-auto custom-scroll px-4">
         <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 pl-4">Menu Principal</div>
         <NavItem icon={Activity} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-        <NavItem icon={Users} label="Pacientes" active={active - Tab === 'patients'} onClick={() => setActiveTab('patients')} badge="24" />
+        <NavItem icon={Users} label="Pacientes" active={activeTab === 'patients'} onClick={() => setActiveTab('patients')} badge="24" />
         <NavItem icon={FolderOpen} label="Arquivos" active={activeTab === 'files'} onClick={() => setActiveTab('files')} />
         <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 mt-6 pl-4">Pipeline</div>
         <NavItem icon={Mic} label="Transcrição" onClick={() => runAction('transcribe', 'Transcrição de Áudio')} />
