@@ -1,12 +1,11 @@
 import React from 'react';
 import {
-  Activity, Mic, Brain, Network, Database, Settings, Users, FolderOpen, LucideIcon } from
+  Activity, Mic, Brain, Network, Database, Settings, Users, FolderOpen, LucideIcon, Bot } from
 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 const Logo = () =>
 <div className="flex flex-col items-center p-6 select-none">
     <div className="relative w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full border-4 border-background">
@@ -15,7 +14,6 @@ const Logo = () =>
     <h1 className="mt-4 text-xl font-bold tracking-[0.2em] text-foreground">MEDSCRIBE</h1>
     <div className="text-xs tracking-widest text-muted-foreground uppercase mt-1 font-medium">Voither HealthOS</div>
   </div>;
-
 interface NavItemProps {
   icon: LucideIcon;
   label: string;
@@ -28,7 +26,6 @@ const NavItem = ({ icon: Icon, label, active, onClick, badge }: NavItemProps) =>
   onClick={onClick}
   variant={active ? 'secondary' : 'ghost'}
   className="w-full justify-start gap-3 px-4 py-2 h-auto text-sm mb-1">
-
     <Icon size={20} className="text-muted-foreground" />
     <span className="flex-1 text-left">{label}</span>
     {badge &&
@@ -37,7 +34,6 @@ const NavItem = ({ icon: Icon, label, active, onClick, badge }: NavItemProps) =>
       </span>
   }
   </Button>;
-
 export function AppSidebar(): JSX.Element {
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
@@ -48,6 +44,7 @@ export function AppSidebar(): JSX.Element {
       <div className="flex-1 overflow-y-auto custom-scroll px-4">
         <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 pl-4">Menu Principal</div>
         <NavItem icon={Activity} label="Dashboard" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+        <NavItem icon={Bot} label="Assistente IA" active={activeTab === 'ai-assistant'} onClick={() => setActiveTab('ai-assistant')} />
         <NavItem icon={Users} label="Pacientes" active={activeTab === 'patients'} onClick={() => setActiveTab('patients')} badge="24" />
         <NavItem icon={FolderOpen} label="Arquivos" active={activeTab === 'files'} onClick={() => setActiveTab('files')} />
         <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 mt-6 pl-4">Pipeline</div>
@@ -71,5 +68,4 @@ export function AppSidebar(): JSX.Element {
         </div>
       </div>
     </aside>);
-
 }

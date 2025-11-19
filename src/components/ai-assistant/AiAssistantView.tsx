@@ -1,5 +1,5 @@
 import React from 'react';
-import { GenUIAssistant } from '@/components/ai-assistant/GenUIAssistant';
+import { ChatCli } from '@/components/dashboard/ChatCli';
 import { useAppStore } from '@/lib/store';
 import { Card } from '@/components/ui/card';
 export const AiAssistantView = () => {
@@ -10,7 +10,7 @@ export const AiAssistantView = () => {
   return (
     <div className="h-full flex flex-col animate-fade-in">
       <div className="flex-1 overflow-hidden">
-        <GenUIAssistant />
+        <ChatCli />
       </div>
       <Card className="mt-6 p-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -19,7 +19,7 @@ export const AiAssistantView = () => {
             {statusText}
           </span>
         </div>
-        <span className="text-[10px] text-muted-foreground">v3.0.0-genui</span>
+        <span className="text-[10px] text-muted-foreground">v2.7.0-genai</span>
       </Card>
     </div>
   );

@@ -3,7 +3,7 @@ export const generateLogs = (action: string): string[] => {
   const timestamp = new Date().toLocaleTimeString();
   return [
     `[${timestamp}] INICIANDO: ${action}...`,
-    `[${timestamp}] VERIFICANDO: Configurações de ambiente carregadas.`,
+    `[${timestamp}] VERIFICANDO: Configura��ões de ambiente carregadas.`,
     `[${timestamp}] CONEXÃO: Voither HealthOS Gateway [OK]`,
     `[${timestamp}] MODELO: Carregando par��metros...`,
     `[${timestamp}] PROCESSANDO: Aguardando resposta do pipeline...`,
@@ -17,13 +17,19 @@ export const mockPatients = [
   { id: 5, name: 'Paciente 1005', lastUpdate: '1 semana atrás', transcriptions: 3, analyses: 1, status: 'INATIVO' },
   { id: 6, name: 'Paciente 1006', lastUpdate: '2 semanas atrás', transcriptions: 32, analyses: 28, status: 'ATIVO' },
 ];
-export const mockAgents: { id: string; title: string; desc: string; icon: LucideIcon; tag: string }[] = [
-    { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0' },
-    { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, conferência e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO' },
-    { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET' },
-    { id: 'dim', title: 'Dimensional (ℳ)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM' },
-    { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH' },
-    { id: 'anon', title: 'Anonimizar', desc: 'Pipeline de segurança para remover PII de transcrições e análises antes do upload.', icon: ShieldCheck, tag: 'PRIVACY' },
+export const mockAgents: { id: string; title: string; desc: string; icon: LucideIcon; tag: string; status: 'online' | 'busy' | 'offline' }[] = [
+    { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0', status: 'online' },
+    { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, conferência e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO', status: 'online' },
+    { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET', status: 'busy' },
+    { id: 'dim', title: 'Dimensional (��)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
+    { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH', status: 'offline' },
+    { id: 'anon', title: 'Anonimizar', desc: 'Pipeline de segurança para remover PII de transcrições e análises antes do upload.', icon: ShieldCheck, tag: 'PRIVACY', status: 'online' },
+];
+export const mockAppointments = [
+    { patient: 'Paciente 1001', time: '09:00', date: 'Hoje' },
+    { patient: 'Paciente 1003', time: '10:30', date: 'Hoje' },
+    { patient: 'Paciente 1002', time: '14:00', date: 'Amanhã' },
+    { patient: 'Paciente 1006', time: '11:00', date: '25/07' },
 ];
 export const generateAiResponse = (userInput: string): string => {
   const lowerInput = userInput.toLowerCase();

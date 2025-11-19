@@ -7,6 +7,7 @@ import { DashboardView } from '@/components/dashboard/DashboardView';
 import { PatientsView } from '@/components/patients/PatientsView';
 import { FilesView } from '@/components/files/FilesView';
 import { SettingsView } from '@/components/settings/SettingsView';
+import { AiAssistantView } from '@/components/ai-assistant/AiAssistantView';
 import { Button } from '@/components/ui/button';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -27,6 +28,7 @@ const viewTitles: Record<TabId, string> = {
   patients: 'Gestão de Pacientes',
   files: 'Arquivos do Sistema',
   settings: 'Configurações',
+  'ai-assistant': 'Assistente IA',
 };
 const PlaceholderView = ({ title }: { title: string }) => (
   <div className="flex flex-col items-center justify-center h-full text-muted-foreground animate-fade-in">
@@ -48,6 +50,8 @@ export function HomePage() {
         return <FilesView />;
       case 'settings':
         return <SettingsView />;
+      case 'ai-assistant':
+        return <AiAssistantView />;
       default:
         return <PlaceholderView title={viewTitles[activeTab] || 'Página'} />;
     }

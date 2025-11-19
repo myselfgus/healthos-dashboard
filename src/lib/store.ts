@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { generateLogs, generateAiResponse } from '@/lib/mock-data';
 import { v4 as uuidv4 } from 'uuid';
-export type TabId = 'dashboard' | 'patients' | 'files' | 'settings' | string;
+export type TabId = 'dashboard' | 'patients' | 'files' | 'settings' | 'ai-assistant' | string;
 export interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -45,7 +45,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
   runAction: (id, title) => {
     if (get().systemProcessing || get().isAiThinking) return;
-    set({ systemProcessing: id, chatHistory: [] });
+    const originalTab = get().activeTab;
+    set({ systemProcessing: id, activeTab: 'ai-assistant', chatHistory: [] });
     const addSystemMessage = (content: string) => {
         get().addChatMessage({ role: 'system', content });
     };
@@ -58,6 +59,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     setTimeout(() => {
       addSystemMessage(`[${new Date().toLocaleTimeString()}] SUCESSO: ${title} finalizado com êxito.`);
       set({ systemProcessing: null });
+      if (originalTab !== 'ai-assistant') {
+        // Optionally, you can decide whether to switch back or stay.
+        // For now, let's stay on the AI assistant view to see the logs.
+      }
     }, delay + 1000);
   },
 }));
