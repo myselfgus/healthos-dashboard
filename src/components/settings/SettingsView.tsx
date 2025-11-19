@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Palette, HardDrive, Sun, Moon } from 'lucide-react';
+import { User, Palette, HardDrive } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTheme } from '@/hooks/use-theme';
+import { toast } from 'sonner';
 const ProfileSettings = () => (
   <Card>
     <CardHeader>
@@ -29,7 +30,7 @@ const ProfileSettings = () => (
       </div>
     </CardContent>
     <CardFooter>
-      <Button>Salvar Alterações</Button>
+      <Button onClick={() => toast.success("Perfil atualizado com sucesso!")}>Salvar Alterações</Button>
     </CardFooter>
   </Card>
 );
@@ -63,7 +64,7 @@ const AppearanceSettings = () => {
               <SelectValue placeholder="Selecione uma fonte" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="inter">Inter (Padrão)</SelectItem>
+              <SelectItem value="inter">Inter (Padr��o)</SelectItem>
               <SelectItem value="system">Fonte do Sistema</SelectItem>
               <SelectItem value="mono">Monoespaçada</SelectItem>
             </SelectContent>
@@ -71,7 +72,7 @@ const AppearanceSettings = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button>Salvar Preferências</Button>
+        <Button onClick={() => toast.success("Preferências de aparência salvas!")}>Salvar Preferências</Button>
       </CardFooter>
     </Card>
   );
@@ -85,7 +86,7 @@ const SystemSettings = () => (
     <CardContent className="space-y-4 text-sm">
       <div className="flex items-center justify-between">
         <span className="text-muted-foreground">Versão do App:</span>
-        <span className="font-medium">v2.5.1-final</span>
+        <span className="font-medium">v2.8.0-final</span>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-muted-foreground">Última Verificação:</span>
@@ -101,7 +102,7 @@ const SystemSettings = () => (
       </div>
     </CardContent>
     <CardFooter>
-      <Button variant="outline">Verificar Atualizações</Button>
+      <Button variant="outline" onClick={() => toast.info("Verificando atualizações...", { description: "Nenhuma nova atualização encontrada." })}>Verificar Atualizações</Button>
     </CardFooter>
   </Card>
 );
@@ -113,7 +114,7 @@ export const SettingsView = () => {
         <p className="text-sm text-muted-foreground">Gerencie as configurações da sua conta e do sistema.</p>
       </div>
       <Tabs defaultValue="profile" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
           <TabsTrigger value="profile">
             <User className="mr-2 h-4 w-4" />
             Perfil

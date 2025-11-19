@@ -2,7 +2,17 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Video, Plus } from 'lucide-react';
+import { toast } from 'sonner';
 export const VideoCallWidget = () => {
+  const handleStartCall = () => {
+    toast.success("Iniciando chamada de vídeo segura...", {
+      description: "A janela da chamada será aberta em breve.",
+      action: {
+        label: "Ok",
+        onClick: () => {},
+      },
+    });
+  };
   return (
     <Card className="relative overflow-hidden bg-gradient-to-br from-primary/90 to-primary text-primary-foreground">
       <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full opacity-50"></div>
@@ -16,7 +26,7 @@ export const VideoCallWidget = () => {
           <p className="text-sm text-primary-foreground/80 mb-6">
             Inicie uma nova sessão de vídeo com um paciente de forma rápida e segura.
           </p>
-          <Button variant="secondary" size="lg" className="w-full">
+          <Button variant="secondary" size="lg" className="w-full" onClick={handleStartCall}>
             <Plus className="mr-2 h-4 w-4" />
             Iniciar Chamada
           </Button>

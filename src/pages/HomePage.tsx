@@ -2,13 +2,14 @@ import React from 'react';
 import { Moon, Sun, UploadCloud, AlertCircle, Settings } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useAppStore, TabId } from '@/lib/store';
-import { AppSidebar } from '@/components/app-sidebar';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { PatientsView } from '@/components/patients/PatientsView';
 import { FilesView } from '@/components/files/FilesView';
 import { SettingsView } from '@/components/settings/SettingsView';
 import { AiAssistantView } from '@/components/ai-assistant/AiAssistantView';
 import { Button } from '@/components/ui/button';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { Toaster } from '@/components/ui/sonner';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
   return (
@@ -57,9 +58,8 @@ export function HomePage() {
     }
   };
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
-      <AppSidebar />
-      <main className="flex-1 flex flex-col min-w-0">
+    <AppLayout>
+      <main className="flex-1 flex flex-col min-w-0 h-screen">
         <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2 px-6 border-b">
           <div>
             <h2 className="text-2xl font-bold text-foreground tracking-tight">
@@ -77,6 +77,7 @@ export function HomePage() {
           {renderContent()}
         </div>
       </main>
-    </div>
+      <Toaster />
+    </AppLayout>
   );
 }
