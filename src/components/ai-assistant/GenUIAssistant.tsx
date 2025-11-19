@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Info } from 'lucide-react';
+import { Send, Bot, User, Loader2, Info, Sparkles } from 'lucide-react';
 import { useAppStore, Message } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -47,6 +47,28 @@ const MessageBubble = ({ msg }: { msg: Message }) => {
     </div>
   );
 };
+const SuggestedPrompts = ({ onPromptClick }: { onPromptClick: (prompt: string) => void }) => {
+  const prompts = [
+    "Resumo do paciente 1001",
+    "Plano de ação para paciente 1001",
+    "Histórico de vitais do paciente 1003",
+  ];
+  return (
+    <div className="p-4 animate-fade-in">
+      <div className="flex flex-col items-center gap-2">
+        <Sparkles className="h-6 w-6 text-muted-foreground" />
+        <p className="text-sm font-medium text-muted-foreground mb-2">Experimente um destes comandos:</p>
+        <div className="flex flex-wrap justify-center gap-2">
+          {prompts.map((prompt, i) => (
+            <Button key={i} variant="outline" size="sm" onClick={() => onPromptClick(prompt)}>
+              {prompt}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 export const GenUIAssistant = () => {
   const [input, setInput] = useState('');
   const chatHistory = useAppStore(s => s.chatHistory);
@@ -64,7 +86,11 @@ export const GenUIAssistant = () => {
       setInput('');
     }
   };
+  const handlePromptClick = (prompt: string) => {
+    sendMessage(prompt);
+  };
   const isInputDisabled = isAiThinking || !!systemProcessing;
+  const showSuggestedPrompts = chatHistory.length === 1;
   return (
     <div className="h-full flex flex-col bg-card border rounded-lg overflow-hidden">
       <header className="p-4 border-b">
@@ -85,6 +111,7 @@ export const GenUIAssistant = () => {
         )}
         <div ref={scrollRef} />
       </div>
+      {showSuggestedPrompts && <SuggestedPrompts onPromptClick={handlePromptClick} />}
       <footer className="p-4 border-t bg-background">
         <form onSubmit={handleSend} className="flex items-center gap-2">
           <Input

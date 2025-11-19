@@ -1,5 +1,14 @@
 import { Users, Mic, FileText, Brain, FolderOpen, Activity, Network, ShieldCheck, LucideIcon } from 'lucide-react';
 import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
+export type PatientStatus = 'ATIVO' | 'EM OBS' | 'INATIVO';
+export interface Patient {
+  id: number;
+  name: string;
+  lastUpdate: string;
+  transcriptions: number;
+  analyses: number;
+  status: PatientStatus;
+}
 export const generateLogs = (action: string): string[] => {
   const timestamp = new Date().toLocaleTimeString();
   return [
@@ -10,7 +19,7 @@ export const generateLogs = (action: string): string[] => {
     `[${timestamp}] PROCESSANDO: Aguardando resposta do pipeline...`,
   ];
 };
-export const mockPatients = [
+export const mockPatients: Patient[] = [
   { id: 1, name: 'Paciente 1001', lastUpdate: '2 horas atrás', transcriptions: 12, analyses: 8, status: 'ATIVO' },
   { id: 2, name: 'Paciente 1002', lastUpdate: '5 horas atrás', transcriptions: 8, analyses: 5, status: 'ATIVO' },
   { id: 3, name: 'Paciente 1003', lastUpdate: '1 dia atrás', transcriptions: 21, analyses: 15, status: 'ATIVO' },
@@ -21,6 +30,79 @@ export const mockPatients = [
 export const mockAgents: { id: string; title: string; desc: string; icon: LucideIcon; tag: string; status: 'online' | 'busy' | 'offline' }[] = [
     { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0', status: 'online' },
     { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, conferência e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO', status: 'online' },
+    { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET', status: 'busy' },
+    { id: 'dim', title: 'Dimensional (M)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
+    { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH', status: 'offline' },
+    { id: 'anon', title: 'Anonimizar', desc: 'Pipeline de segurança para remover PII de transcrições e análises antes do upload.', icon: ShieldCheck, tag: 'PRIVACY', status: 'online' },
+];
+export const mockAppointments = [
+    { patient: 'Paciente 1001', time: '09:00', date: 'Hoje' },
+    { patient: 'Paciente 1003', time: '10:30', date: 'Hoje' },
+    { patient: 'Paciente 1002', time: '14:00', date: 'Amanhã' },
+    { patient: 'Paciente 1006', time: '11:00', date: '25/07' },
+];
+export const generateAiResponse = (userInput: string): { content: string; uiComponent?: GenUIComponent } => {
+  const lowerInput = userInput.toLowerCase();
+  const patientMatch = lowerInput.match(/paciente (\d+)/);
+  if (patientMatch && patientMatch[1]) {
+    const patientId = parseInt(patientMatch[1], 10);
+    const patient = mockPatients.find(p => p.name.includes(patientId.toString()));
+    if (patient) {
+      return {
+        content: `Claro, aqui está um resumo para o ${patient.name}.`,
+        uiComponent: {
+          type: 'patient_summary',
+          data: {
+            name: patient.name,
+            id: `P${patient.id.toString().padStart(4, '0')}`,
+            lastUpdate: patient.lastUpdate,
+            status: patient.status,
+            metrics: [
+              { label: 'Transcrições', value: patient.transcriptions },
+              { label: 'Análises ASL', value: patient.analyses },
+            ],
+          },
+        },
+      };
+    } else {
+      return { content: `Paciente com ID ${patientId} não encontrado.` };
+    }
+  }
+  if (lowerInput.includes('plano de ação') || lowerInput.includes('recomendações')) {
+    return {
+      content: "Com base na última análise, gerei o seguinte plano de ação para o Pac# Implement type safety for mock data and add suggested prompts to the AI assistant
+cat > src/lib/mock-data.ts << 'EOF'
+import { Users, Mic, FileText, Brain, FolderOpen, Activity, Network, ShieldCheck, LucideIcon } from 'lucide-react';
+import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
+export interface Patient {
+  id: number;
+  name: string;
+  lastUpdate: string;
+  transcriptions: number;
+  analyses: number;
+  status: 'ATIVO' | 'EM OBS' | 'INATIVO';
+}
+export const generateLogs = (action: string): string[] => {
+  const timestamp = new Date().toLocaleTimeString();
+  return [
+    `[${timestamp}] INICIANDO: ${action}...`,
+    `[${timestamp}] VERIFICANDO: Configurações de ambiente carregadas.`,
+    `[${timestamp}] CONEXÃO: Voither HealthOS Gateway [OK]`,
+    `[${timestamp}] MODELO: Carregando parâmetros...`,
+    `[${timestamp}] PROCESSANDO: Aguardando resposta do pipeline...`,
+  ];
+};
+export const mockPatients: Patient[] = [
+  { id: 1, name: 'Paciente 1001', lastUpdate: '2 horas atrás', transcriptions: 12, analyses: 8, status: 'ATIVO' },
+  { id: 2, name: 'Paciente 1002', lastUpdate: '5 horas atrás', transcriptions: 8, analyses: 5, status: 'ATIVO' },
+  { id: 3, name: 'Paciente 1003', lastUpdate: '1 dia atrás', transcriptions: 21, analyses: 15, status: 'ATIVO' },
+  { id: 4, name: 'Paciente 1004', lastUpdate: '3 dias atrás', transcriptions: 5, analyses: 4, status: 'EM OBS' },
+  { id: 5, name: 'Paciente 1005', lastUpdate: '1 semana atrás', transcriptions: 3, analyses: 1, status: 'INATIVO' },
+  { id: 6, name: 'Paciente 1006', lastUpdate: '2 semanas atrás', transcriptions: 32, analyses: 28, status: 'ATIVO' },
+];
+export const mockAgents: { id: string; title: string; desc: string; icon: LucideIcon; tag: string; status: 'online' | 'busy' | 'offline' }[] = [
+    { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0', status: 'online' },
+    { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, confer��ncia e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO', status: 'online' },
     { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET', status: 'busy' },
     { id: 'dim', title: 'Dimensional (M)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
     { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH', status: 'offline' },
