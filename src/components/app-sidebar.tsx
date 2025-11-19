@@ -30,7 +30,7 @@ const NavItem = ({ icon: Icon, label, active, onClick, badge }: NavItemProps) =>
       'w-full flex items-center gap-3 px-4 py-3 mb-3 rounded-xl transition-all duration-200 text-sm',
       active
         ? 'shadow-neu-pressed text-petrol font-bold'
-        : 'text-muted-foreground hover:text-petrol hover:translate-y-[-1px]'
+        : 'text-muted-foreground hover:text-petrol hover:shadow-neu-sm hover:-translate-y-0.5'
     )}
   >
     <Icon size={20} className={cn(active && "text-petrol")} />

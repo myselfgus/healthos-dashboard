@@ -9,13 +9,13 @@ import { cn } from '@/lib/utils';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
   return (
-    <button onClick={toggleTheme} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed">
+    <button onClick={toggleTheme} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed active:translate-y-0">
       {isDark ? <Sun size={20} /> : <Moon size={20} />}
     </button>
   );
 };
 const HeaderButton = ({ icon: Icon, onClick }: { icon: React.ElementType, onClick: () => void }) => (
-  <button onClick={onClick} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed">
+  <button onClick={onClick} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed active:translate-y-0">
     <Icon size={20} />
   </button>
 );
