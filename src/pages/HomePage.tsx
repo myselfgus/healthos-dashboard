@@ -1,148 +1,71 @@
-// Home page of the app, Currently a demo page for demonstration.
-// Please rewrite this file to implement your own logic. Do not replace or delete it, simply rewrite this HomePage.tsx file.
-import { useEffect } from 'react'
-import { Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { Toaster, toast } from '@/components/ui/sonner'
-import { create } from 'zustand'
-import { useShallow } from 'zustand/react/shallow'
-import { AppLayout } from '@/components/layout/AppLayout'
-
-// Timer store: independent slice with a clear, minimal API, for demonstration
-type TimerState = {
-  isRunning: boolean;
-  elapsedMs: number;
-  start: () => void;
-  pause: () => void;
-  reset: () => void;
-  tick: (deltaMs: number) => void;
-}
-
-const useTimerStore = create<TimerState>((set) => ({
-  isRunning: false,
-  elapsedMs: 0,
-  start: () => set({ isRunning: true }),
-  pause: () => set({ isRunning: false }),
-  reset: () => set({ elapsedMs: 0, isRunning: false }),
-  tick: (deltaMs) => set((s) => ({ elapsedMs: s.elapsedMs + deltaMs })),
-}))
-
-// Counter store: separate slice to showcase multiple stores without coupling
-type CounterState = {
-  count: number;
-  inc: () => void;
-  reset: () => void;
-}
-
-const useCounterStore = create<CounterState>((set) => ({
-  count: 0,
-  inc: () => set((s) => ({ count: s.count + 1 })),
-  reset: () => set({ count: 0 }),
-}))
-
-function formatDuration(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000))
-  const m = Math.floor(total / 60)
-  const s = total % 60
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
-export function HomePage() {
-  // Select only what is needed to avoid unnecessary re-renders
-  const { isRunning, elapsedMs } = useTimerStore(
-    useShallow((s) => ({ isRunning: s.isRunning, elapsedMs: s.elapsedMs })),
-  )
-  const start = useTimerStore((s) => s.start)
-  const pause = useTimerStore((s) => s.pause)
-  const resetTimer = useTimerStore((s) => s.reset)
-  const count = useCounterStore((s) => s.count)
-  const inc = useCounterStore((s) => s.inc)
-  const resetCount = useCounterStore((s) => s.reset)
-
-  // Drive the timer only while running; avoid update-depth issues with a scoped RAF
-  useEffect(() => {
-    if (!isRunning) return
-    let raf = 0
-    let last = performance.now()
-    const loop = () => {
-      const now = performance.now()
-      const delta = now - last
-      last = now
-      // Read store API directly to keep effect deps minimal and stable
-      useTimerStore.getState().tick(delta)
-      raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(raf)
-  }, [isRunning])
-
-  const onPleaseWait = () => {
-    inc()
-    if (!isRunning) {
-      start()
-      toast.success('Building your app…', {
-        description: 'Hang tight, we\'re setting everything up.',
-      })
-    } else {
-      pause()
-      toast.info('Taking a short pause', {
-        description: 'We\'ll continue shortly.',
-      })
-    }
-  }
-
-  const formatted = formatDuration(elapsedMs)
-
+import React from 'react';
+import { Moon, Sun, UploadCloud, AlertCircle, Settings } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
+import { useAppStore, TabId } from '@/lib/store';
+import { AppSidebar } from '@/components/app-sidebar';
+import { DashboardView } from '@/components/dashboard/DashboardView';
+import { PatientsView } from '@/components/patients/PatientsView';
+import { cn } from '@/lib/utils';
+const ThemeToggle = () => {
+  const { isDark, toggleTheme } = useTheme();
   return (
-    <AppLayout>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4 overflow-hidden relative">
-        <ThemeToggle />
-        <div className="absolute inset-0 bg-gradient-rainbow opacity-10 dark:opacity-20 pointer-events-none" />
-        <div className="text-center space-y-8 relative z-10 animate-fade-in">
-          <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-primary floating">
-              <Sparkles className="w-8 h-8 text-white rotating" />
-            </div>
+    <button onClick={toggleTheme} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed">
+      {isDark ? <Sun size={20} /> : <Moon size={20} />}
+    </button>
+  );
+};
+const HeaderButton = ({ icon: Icon, onClick }: { icon: React.ElementType, onClick: () => void }) => (
+  <button onClick={onClick} className="shadow-neu-sm w-12 h-12 rounded-full flex items-center justify-center text-petrol transition-all duration-200 hover:-translate-y-0.5 active:shadow-neu-pressed">
+    <Icon size={20} />
+  </button>
+);
+const viewTitles: Record<TabId, string> = {
+  dashboard: 'Visão Geral do Sistema',
+  patients: 'Gestão de Pacientes',
+  files: 'Arquivos do Sistema',
+  settings: 'Configurações',
+};
+const PlaceholderView = ({ title }: { title: string }) => (
+  <div className="flex flex-col items-center justify-center h-full text-muted-foreground animate-fade-in">
+    <Settings size={48} className="mb-4 opacity-20" />
+    <p className="text-lg">{title}</p>
+    <p className="text-sm">Módulo em construção...</p>
+  </div>
+);
+export function HomePage() {
+  const activeTab = useAppStore(s => s.activeTab);
+  const addLog = useAppStore(s => s.addLog);
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <DashboardView />;
+      case 'patients':
+        return <PatientsView />;
+      default:
+        return <PlaceholderView title={viewTitles[activeTab] || 'Página'} />;
+    }
+  };
+  return (
+    <div className="flex h-screen bg-[var(--app-bg)] text-[var(--text-main)] overflow-hidden font-sans">
+      <AppSidebar />
+      <main className="flex-1 flex flex-col min-w-0 p-6 pl-0">
+        <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2">
+          <div>
+            <h2 className="text-2xl font-bold text-petrol tracking-tight">
+              {viewTitles[activeTab] || 'AuraDash'}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">Bem-vindo ao MedScribe HealthOS</p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-balance leading-tight">
-            Creating your <span className="text-gradient">app</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto text-pretty">
-            Your application would be ready soon.
-          </p>
-          <div className="flex justify-center gap-4">
-            <Button 
-              size="lg"
-              onClick={onPleaseWait}
-              className="btn-gradient px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200"
-              aria-live="polite"
-            >
-              Please Wait
-            </Button>
+          <div className="flex gap-4">
+            <HeaderButton icon={AlertCircle} onClick={() => addLog("Sistema auditado manualmente.")} />
+            <HeaderButton icon={UploadCloud} onClick={() => addLog("Sincronização com nuvem iniciada.")} />
+            <ThemeToggle />
           </div>
-          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-            <div>
-              Time elapsed: <span className="font-medium tabular-nums text-foreground">{formatted}</span>
-            </div>
-            <div>
-              Coins: <span className="font-medium tabular-nums text-foreground">{count}</span>
-            </div>
-          </div>
-          <div className="flex justify-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => { resetTimer(); resetCount(); toast('Reset complete') }}>
-              Reset
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => { inc(); toast('Coin added') }}>
-              Add Coin
-            </Button>
-          </div>
+        </header>
+        <div className="flex-1 overflow-hidden relative">
+          {renderContent()}
         </div>
-        <footer className="absolute bottom-8 text-center text-muted-foreground/80">
-          <p>Powered by Cloudflare</p>
-        </footer>
-        <Toaster richColors closeButton />
-      </div>
-    </AppLayout>
-  )
+      </main>
+    </div>
+  );
 }

@@ -5,12 +5,12 @@ export const TerminalView = ({ logs }: { logs: string[] }) => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [logs]);
   return (
-    <div className="bg-muted/50 rounded-lg border p-4 font-mono text-xs h-full overflow-hidden flex flex-col">
-      <div className="flex items-center justify-between mb-2 pb-2 border-b text-muted-foreground uppercase tracking-wider text-[10px]">
+    <div className="shadow-neu-inset rounded-2xl p-4 font-mono text-xs h-full overflow-hidden flex flex-col">
+      <div className="flex items-center justify-between mb-2 pb-2 border-b border-border/50 text-muted-foreground uppercase tracking-wider text-[10px]">
         <div className="flex gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-          <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+          <div className="w-2 h-2 rounded-full bg-red-400"></div>
+          <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+          <div className="w-2 h-2 rounded-full bg-green-400"></div>
         </div>
         <span>System Output</span>
       </div>
@@ -21,7 +21,7 @@ export const TerminalView = ({ logs }: { logs: string[] }) => {
           </div>
         )}
         {logs.map((log, i) => (
-          <div key={i} className="text-foreground/80 border-l-2 border-transparent hover:border-primary/50 pl-2 py-0.5 animate-fade-in">
+          <div key={i} className="text-petrol/80 border-l-2 border-transparent hover:border-moss/50 pl-2 py-0.5 animate-fade-in">
             <span className="opacity-50 mr-2">{i + 1}</span>
             {log}
           </div>

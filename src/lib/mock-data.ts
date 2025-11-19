@@ -1,120 +1,18 @@
-import { Users, Mic, FileText, Brain, FolderOpen, Activity, Network, ShieldCheck, LucideIcon } from 'lucide-react';
-import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
-export type PatientStatus = 'ATIVO' | 'EM OBS' | 'INATIVO';
-export interface Patient {
-  id: number;
-  name: string;
-  lastUpdate: string;
-  transcriptions: number;
-  analyses: number;
-  status: PatientStatus;
-}
 export const generateLogs = (action: string): string[] => {
   const timestamp = new Date().toLocaleTimeString();
   return [
     `[${timestamp}] INICIANDO: ${action}...`,
     `[${timestamp}] VERIFICANDO: Configurações de ambiente carregadas.`,
     `[${timestamp}] CONEXÃO: Voither HealthOS Gateway [OK]`,
-    `[${timestamp}] MODELO: Carregando parâmetros...`,
+    `[${timestamp}] MODELO: Carregando par��metros...`,
     `[${timestamp}] PROCESSANDO: Aguardando resposta do pipeline...`,
   ];
 };
-export const mockPatients: Patient[] = [
+export const mockPatients = [
   { id: 1, name: 'Paciente 1001', lastUpdate: '2 horas atrás', transcriptions: 12, analyses: 8, status: 'ATIVO' },
   { id: 2, name: 'Paciente 1002', lastUpdate: '5 horas atrás', transcriptions: 8, analyses: 5, status: 'ATIVO' },
   { id: 3, name: 'Paciente 1003', lastUpdate: '1 dia atrás', transcriptions: 21, analyses: 15, status: 'ATIVO' },
   { id: 4, name: 'Paciente 1004', lastUpdate: '3 dias atrás', transcriptions: 5, analyses: 4, status: 'EM OBS' },
   { id: 5, name: 'Paciente 1005', lastUpdate: '1 semana atrás', transcriptions: 3, analyses: 1, status: 'INATIVO' },
   { id: 6, name: 'Paciente 1006', lastUpdate: '2 semanas atrás', transcriptions: 32, analyses: 28, status: 'ATIVO' },
-];
-export const mockAgents: { id: string; title: string; desc: string; icon: LucideIcon; tag: string; status: 'online' | 'busy' | 'offline' }[] = [
-    { id: 'transcribe', title: 'Transcrever Áudio', desc: 'Pipeline ElevenLabs STT com diarização automática de falantes para arquivos na pasta /audio.', icon: Mic, tag: 'V1.0', status: 'online' },
-    { id: 'process', title: 'Processar Dossiês', desc: 'Extração de metadados, conferência e organização de pastas para novos pacientes.', icon: FolderOpen, tag: 'AUTO', status: 'online' },
-    { id: 'asl', title: 'Análise ASL', desc: 'Análise Sistêmica Linguística (Psicolinguística) utilizando Claude Sonnet 4.5.', icon: Brain, tag: 'SONNET', status: 'busy' },
-    { id: 'dim', title: 'Dimensional (M)', desc: 'Extração das 15 dimensões do espaço mental: Afetiva, Cognitiva e Linguística.', icon: Activity, tag: '15-DIM', status: 'online' },
-    { id: 'gem', title: 'Grafo GEM', desc: 'Geração de Grafos do Espaço-Campo Mental (AJE + IRE + E) para visualização topológica.', icon: Network, tag: 'GRAPH', status: 'offline' },
-    { id: 'anon', title: 'Anonimizar', desc: 'Pipeline de segurança para remover PII de transcrições e análises antes do upload.', icon: ShieldCheck, tag: 'PRIVACY', status: 'online' },
-];
-export const mockAppointments = [
-    { patient: 'Paciente 1001', time: '09:00', date: 'Hoje' },
-    { patient: 'Paciente 1003', time: '10:30', date: 'Hoje' },
-    { patient: 'Paciente 1002', time: '14:00', date: 'Amanhã' },
-    { patient: 'Paciente 1006', time: '11:00', date: '25/07' },
-];
-export const generateAiResponse = (userInput: string): { content: string; uiComponent?: GenUIComponent } => {
-  const lowerInput = userInput.toLowerCase();
-  const patientMatch = lowerInput.match(/paciente (\d+)/);
-  if (patientMatch && patientMatch[1]) {
-    const patientId = parseInt(patientMatch[1], 10);
-    const patient = mockPatients.find(p => p.name.includes(patientId.toString()));
-    if (patient) {
-      return {
-        content: `Claro, aqui está um resumo para o ${patient.name}.`,
-        uiComponent: {
-          type: 'patient_summary',
-          data: {
-            name: patient.name,
-            id: `P${patient.id.toString().padStart(4, '0')}`,
-            lastUpdate: patient.lastUpdate,
-            status: patient.status,
-            metrics: [
-              { label: 'Transcrições', value: patient.transcriptions },
-              { label: 'Análises ASL', value: patient.analyses },
-            ],
-          },
-        },
-      };
-    } else {
-      return { content: `Paciente com ID ${patientId} não encontrado.` };
-    }
-  }
-  if (lowerInput.includes('plano de ação') || lowerInput.includes('recomendações')) {
-    return {
-      content: "Com base na última análise, gerei o seguinte plano de ação para o Paciente 1001:",
-      uiComponent: {
-        type: 'action_plan',
-        data: {
-          title: 'Plano de Ação - Paciente 1001',
-          steps: [
-            { id: '1', description: 'Agendar sessão de acompanhamento', completed: false },
-            { id: '2', description: 'Revisar resultados da análise dimensional', completed: true },
-            { id: '3', description: 'Preparar relatório para o paciente', completed: false },
-          ],
-        },
-      },
-    };
-  }
-  if (lowerInput.includes('vitais') || lowerInput.includes('histórico')) {
-    return {
-      content: "Aqui está o histórico de engajamento do Paciente 1003 nas últimas semanas:",
-      uiComponent: {
-        type: 'vitals_chart',
-        data: {
-          title: 'Engajamento Semanal',
-          data: [
-            { name: 'Semana 1', value: 65 },
-            { name: 'Semana 2', value: 70 },
-            { name: 'Semana 3', value: 85 },
-            { name: 'Semana 4', value: 80 },
-          ],
-        },
-      },
-    };
-  }
-  if (lowerInput.includes('ajuda') || lowerInput.includes('comandos')) {
-    return { content: "Comandos disponíveis:\n- `paciente [ID]`: Mostra um resumo de um paciente (ex: `paciente 1001`).\n- `plano de ação`: Gera um plano de ação de exemplo.\n- `histórico de vitais`: Mostra um gráfico de exemplo." };
-  }
-  return { content: "Desculpe, não entendi o comando. Digite `ajuda` para ver uma lista de comandos que eu conheço." };
-};
-export const mockFiles = [
-  { id: '1', name: 'Paciente 1001', type: 'folder', size: '--', lastModified: '2024-05-20 09:00 AM' },
-  { id: '2', name: 'Paciente 1002', type: 'folder', size: '--', lastModified: '2024-05-19 14:20 PM' },
-  { id: '3', name: 'transcricao_1001_sessao_1.wav', type: 'wav', size: '15.8 MB', lastModified: '2024-05-20 09:15 AM' },
-  { id: '4', name: 'analise_asl_1001.pdf', type: 'pdf', size: '1.2 MB', lastModified: '2024-05-20 10:30 AM' },
-  { id: '5', name: 'notas_sessao_1002.txt', type: 'txt', size: '5 KB', lastModified: '2024-05-19 15:00 PM' },
-  { id: '6', name: 'relatorio_dimensional_1001.json', type: 'json', size: '256 KB', lastModified: '2024-05-20 11:00 AM' },
-  { id: '7', name: 'Paciente 1003', type: 'folder', size: '--', lastModified: '2024-05-18 11:45 AM' },
-  { id: '8', name: 'grafo_gem_1002.svg', type: 'svg', size: '780 KB', lastModified: '2024-05-19 16:00 PM' },
-  { id: '9', name: 'consentimento_informado_1003.pdf', type: 'pdf', size: '800 KB', lastModified: '2024-05-18 11:50 AM' },
-  { id: '10', name: 'audio_sessao_1003_pt1.wav', type: 'wav', size: '22.1 MB', lastModified: '2024-05-18 12:30 PM' },
 ];

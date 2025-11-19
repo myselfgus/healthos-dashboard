@@ -20,7 +20,7 @@ export default {
   				'sans-serif'
   			],
   			mono: [
-  				'JetBrains Mono',
+  				'Courier Prime',
   				'Fira Code',
   				'Consolas',
   				'monospace'
@@ -101,6 +101,8 @@ export default {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
+            petrol: 'var(--petrol)',
+            moss: 'var(--moss)',
   			border: 'hsl(var(--border))',
   			ring: 'hsl(var(--ring))',
   			card: {
@@ -147,7 +149,11 @@ export default {
   			glow: '0 0 20px -5px rgba(99, 102, 241, 0.4)',
   			'glow-lg': '0 0 40px -10px rgba(99, 102, 241, 0.3)',
   			primary: '0 0 20px -5px hsl(var(--primary) / 0.4)',
-  			glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
+  			glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+            'neu': '9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light)',
+            'neu-sm': '6px 6px 10px var(--shadow-dark), -6px -6px 10px var(--shadow-light)',
+            'neu-inset': 'inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light)',
+            'neu-pressed': 'inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light)',
   		},
   		keyframes: {
   			'fade-in': {
@@ -219,17 +225,27 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+            'spin-slow': {
+                from: { transform: 'rotate(0deg)' },
+                to: { transform: 'rotate(360deg)' },
+            },
+            'pulse-green': {
+                '0%, 100%': { opacity: '0.4' },
+                '50%': { opacity: '1', boxShadow: '0 0 15px rgba(85, 107, 47, 0.3)' },
+            }
   		},
   		animation: {
-  			'fade-in': 'fade-in 0.6s ease-out',
+  			'fade-in': 'fade-in 0.5s ease-out forwards',
   			'slide-up': 'slide-up 0.4s ease-out',
   			'scale-in': 'scale-in 0.3s ease-out',
   			shimmer: 'shimmer 2s infinite',
   			glow: 'glow 2s ease-in-out infinite',
   			float: 'float 3s ease-in-out infinite',
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+            'spin-slow': 'spin-slow 10s linear infinite',
+            'pulse-green': 'pulse-green 3s infinite ease-in-out',
   		},
   		backgroundImage: {
   			'gradient-rainbow': 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',

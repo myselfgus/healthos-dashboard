@@ -1,74 +1,36 @@
 import { create } from 'zustand';
-import { generateLogs, generateAiResponse } from '@/lib/mock-data';
-import { v4 as uuidv4 } from 'uuid';
-import { GenUIComponent } from '@/components/genui/GenerativeWidgets';
-export type TabId = 'dashboard' | 'patients' | 'files' | 'settings' | 'ai-assistant' | string;
-export interface Message {
-  id: string;
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  uiComponent?: GenUIComponent;
-}
+import { generateLogs } from '@/lib/mock-data';
+export type TabId = 'dashboard' | 'patients' | 'files' | 'settings' | string;
 interface AppState {
   activeTab: TabId;
-  chatHistory: Message[];
-  systemProcessing: string | null;
-  isAiThinking: boolean;
+  logs: string[];
+  processing: string | null;
   setActiveTab: (tab: TabId) => void;
-  setSystemProcessing: (id: string | null) => void;
+  addLog: (log: string) => void;
+  clearLogs: () => void;
+  setProcessing: (id: string | null) => void;
   runAction: (id: string, title: string) => void;
-  sendMessage: (content: string) => void;
-  addChatMessage: (message: Omit<Message, 'id'>) => void;
 }
 export const useAppStore = create<AppState>((set, get) => ({
   activeTab: 'dashboard',
-  chatHistory: [
-    { id: uuidv4(), role: 'assistant', content: 'Olá! Sou a IA do MedScribe. Como posso ajudar hoje? Digite `ajuda` para ver os comandos.' }
-  ],
-  systemProcessing: null,
-  isAiThinking: false,
+  logs: [],
+  processing: null,
   setActiveTab: (tab) => set({ activeTab: tab }),
-  setSystemProcessing: (id) => set({ systemProcessing: id }),
-  addChatMessage: (message) => {
-    const newMessage = { ...message, id: uuidv4() };
-    set((state) => ({ chatHistory: [...state.chatHistory, newMessage] }));
-  },
-  sendMessage: (content) => {
-    if (!content.trim() || get().isAiThinking || get().systemProcessing) return;
-    const userMessage: Omit<Message, 'id'> = { role: 'user', content };
-    get().addChatMessage(userMessage);
-    set({ isAiThinking: true });
-    setTimeout(() => {
-      const aiResponse = generateAiResponse(content);
-      const aiMessage: Omit<Message, 'id'> = { 
-        role: 'assistant', 
-        content: aiResponse.content,
-        uiComponent: aiResponse.uiComponent,
-      };
-      get().addChatMessage(aiMessage);
-      set({ isAiThinking: false });
-    }, 1200);
-  },
+  addLog: (log) => set((state) => ({ logs: [...state.logs, log] })),
+  clearLogs: () => set({ logs: [] }),
+  setProcessing: (id) => set({ processing: id }),
   runAction: (id, title) => {
-    if (get().systemProcessing || get().isAiThinking) return;
-    const originalTab = get().activeTab;
-    set({ systemProcessing: id, activeTab: 'ai-assistant', chatHistory: [] });
-    const addSystemMessage = (content: string) => {
-        get().addChatMessage({ role: 'system', content });
-    };
+    if (get().processing) return;
+    set({ processing: id, logs: [] });
     const newLogs = generateLogs(title.toUpperCase());
     let delay = 0;
     newLogs.forEach((log) => {
-      setTimeout(() => addSystemMessage(log), delay);
-      delay += 600;
+      setTimeout(() => get().addLog(log), delay);
+      delay += 800;
     });
     setTimeout(() => {
-      addSystemMessage(`[${new Date().toLocaleTimeString()}] SUCESSO: ${title} finalizado com êxito.`);
-      set({ systemProcessing: null });
-      if (originalTab !== 'ai-assistant') {
-        // Optionally, you can decide whether to switch back or stay.
-        // For now, let's stay on the AI assistant view to see the logs.
-      }
+      get().addLog(`[${new Date().toLocaleTimeString()}] SUCESSO: ${title} finalizado com êxito.`);
+      set({ processing: null });
     }, delay + 1000);
   },
 }));

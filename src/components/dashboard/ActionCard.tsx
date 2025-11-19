@@ -1,8 +1,6 @@
 import React from 'react';
-import { LucideIcon, Play, Loader2 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { LucideIcon, Play } from 'lucide-react';
+import { cn } from '@/lib/utils';
 interface ActionCardProps {
   title: string;
   desc: string;
@@ -12,41 +10,43 @@ interface ActionCardProps {
   tag?: string;
 }
 export const ActionCard = ({ title, desc, icon: Icon, onClick, loading, tag }: ActionCardProps) => (
-  <Card className="flex flex-col">
-    <CardHeader className="flex flex-row items-start justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-primary">
-          <Icon size={24} />
-        </div>
-        <div>
-          <CardTitle>{title}</CardTitle>
-        </div>
+  <div className="shadow-neu rounded-2xl p-6 flex flex-col h-full relative border border-transparent hover:border-white/50 transition-all duration-300">
+    {tag && (
+      <div className="absolute top-4 right-4 text-[10px] font-bold tracking-wider text-muted-foreground border border-border px-2 py-0.5 rounded">
+        {tag}
       </div>
-      {tag && <Badge variant="outline">{tag}</Badge>}
-    </CardHeader>
-    <CardContent className="flex-1">
-      <p className="text-sm text-muted-foreground leading-relaxed">
-        {desc}
-      </p>
-    </CardContent>
-    <CardFooter>
-      <Button
-        onClick={onClick}
-        disabled={loading}
-        className="w-full"
-      >
-        {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Processando...
-          </>
-        ) : (
-          <>
-            <Play className="mr-2 h-4 w-4" />
-            Executar
-          </>
-        )}
-      </Button>
-    </CardFooter>
-  </Card>
+    )}
+    <div className="flex items-center gap-4 mb-4">
+      <div className="w-12 h-12 rounded-2xl shadow-neu flex items-center justify-center text-petrol">
+        <Icon size={24} />
+      </div>
+      <h3 className="text-lg font-bold text-petrol">{title}</h3>
+    </div>
+    <p className="text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">
+      {desc}
+    </p>
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className={cn(
+        'shadow-neu-sm w-full py-3 text-sm font-bold uppercase tracking-wide flex items-center justify-center gap-2 rounded-xl transition-all duration-200 text-petrol',
+        'hover:enabled:-translate-y-0.5 hover:enabled:text-moss',
+        'active:shadow-neu-pressed active:translate-y-0',
+        'disabled:opacity-60 disabled:cursor-not-allowed',
+        loading && 'shadow-neu-pressed'
+      )}
+    >
+      {loading ? (
+        <>
+          <div className="w-4 h-4 border-2 border-petrol border-t-transparent rounded-full animate-spin"></div>
+          Processando...
+        </>
+      ) : (
+        <>
+          <Play size={16} />
+          Executar
+        </>
+      )}
+    </button>
+  </div>
 );
