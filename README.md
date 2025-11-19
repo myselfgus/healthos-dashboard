@@ -1,6 +1,6 @@
 # AuraDash: Neumorphic HealthOS Dashboard
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/myselfgus/healthos-dashboard)
 
 AuraDash is a sophisticated and visually stunning web application designed as a HealthOS dashboard. It features a unique Neumorphic design system, creating a soft, tactile user interface that's both modern and intuitive. The application provides a central hub for managing medical data processing pipelines, including audio transcription, patient dossier processing, and advanced linguistic analysis. Built with React, shadcn/ui, and Tailwind CSS, AuraDash prioritizes visual excellence, micro-interactions, and a flawless user experience.
 
@@ -89,7 +89,7 @@ This project is configured for easy deployment to Cloudflare Pages/Workers.
 
 Alternatively, you can deploy directly from your GitHub repository with a single click.
 
-[cloudflarebutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/myselfgus/healthos-dashboard)
 
 ## License
 
