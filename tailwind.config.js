@@ -150,6 +150,13 @@ export default {
   			'glow-lg': '0 0 40px -10px rgba(99, 102, 241, 0.3)',
   			primary: '0 0 20px -5px hsl(var(--primary) / 0.4)',
   			glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+  			/* Sombras Neumórficas Customizadas - 1px blur, 0 spread, x:1 y:1, 70% */
+  			'neomorph': '1px 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 1px 0 rgba(255, 255, 255, 0.7)',
+  			'neomorph-inset': 'inset 1px 1px 1px 0 rgba(0, 0, 0, 0.7), inset -1px -1px 1px 0 rgba(255, 255, 255, 0.7)',
+  			'neomorph-flat': '1px 1px 1px 0 rgba(0, 0, 0, 0.7)',
+  			'neomorph-pressed': 'inset 1px 1px 2px 0 rgba(0, 0, 0, 0.7)',
+  			'neomorph-sm': '1px 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 1px 0 rgba(255, 255, 255, 0.5)',
+  			'neomorph-lg': '2px 2px 2px 0 rgba(0, 0, 0, 0.7), -2px -2px 2px 0 rgba(255, 255, 255, 0.7)',
   		},
   		keyframes: {
   			'fade-in': {

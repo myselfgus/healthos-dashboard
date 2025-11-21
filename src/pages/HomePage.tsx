@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Moon, Sun, UploadCloud, AlertCircle, Settings } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import { useAppStore, TabId } from '@/lib/store';
@@ -10,6 +10,7 @@ import { AiAssistantView } from '@/components/ai-assistant/AiAssistantView';
 import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Toaster } from '@/components/ui/sonner';
+import { initContrastCorrection } from '@/lib/contrast-utils';
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
   return (
@@ -41,6 +42,12 @@ const PlaceholderView = ({ title }: { title: string }) => (
 export function HomePage() {
   const activeTab = useAppStore(s => s.activeTab);
   const addChatMessage = useAppStore(s => s.addChatMessage);
+
+  // Inicializar correção automática de contraste
+  useEffect(() => {
+    initContrastCorrection();
+  }, []);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -60,7 +67,7 @@ export function HomePage() {
   return (
     <AppLayout>
       <main className="flex-1 flex flex-col min-w-0 h-screen">
-        <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2 px-6 border-b">
+        <header className="h-20 flex-shrink-0 flex items-center justify-between mb-2 px-6 glass glass-border shadow-neomorph-sm">
           <div>
             <h2 className="text-2xl font-bold text-foreground tracking-tight">
               {viewTitles[activeTab] || 'AuraDash'}

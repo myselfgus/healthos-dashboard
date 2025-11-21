@@ -3,47 +3,58 @@
 @tailwind utilities;
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 165 100% 15%; /* petrol */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 82 39% 95%; /* moss-light */
-    --accent-foreground: 82 39% 20%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 165 100% 15%;
-    --radius: 0.75rem;
+    /* Paleta Neumórfica Minimalista - Cinza/Prata/Off-White */
+    --background: 220 15% 95%; /* off-white com toque cinza */
+    --foreground: 220 10% 15%; /* cinza escuro suave */
+    --card: 220 20% 97%; /* off-white card */
+    --card-foreground: 220 10% 15%;
+    --popover: 220 20% 98%;
+    --popover-foreground: 220 10% 15%;
+    --primary: 220 8% 55%; /* prata médio */
+    --primary-foreground: 220 15% 98%;
+    --secondary: 220 12% 92%; /* cinza claro */
+    --secondary-foreground: 220 10% 20%;
+    --muted: 220 12% 92%;
+    --muted-foreground: 220 8% 45%;
+    --accent: 220 10% 88%; /* cinza-prata accent */
+    --accent-foreground: 220 10% 15%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 220 15% 98%;
+    --border: 220 12% 88%;
+    --input: 220 12% 90%;
+    --ring: 220 8% 55%;
+    --radius: 1.25rem; /* bordas mais suaves para neumorfismo */
+
+    /* Vidro transparente */
+    --glass-bg: 220 20% 97%;
+    --glass-opacity: 0.7;
+    --glass-blur: 12px;
   }
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 165 80% 60%; /* petrol-light */
-    --primary-foreground: 165 100% 15%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 82 39% 17.5%; /* moss-dark */
-    --accent-foreground: 82 39% 90%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 165 80% 60%;
+    --background: 220 15% 12%; /* cinza escuro */
+    --foreground: 220 15% 92%; /* off-white */
+    --card: 220 15% 15%;
+    --card-foreground: 220 15% 92%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 220 15% 92%;
+    --primary: 220 10% 65%; /* prata claro */
+    --primary-foreground: 220 15% 12%;
+    --secondary: 220 12% 20%;
+    --secondary-foreground: 220 15% 92%;
+    --muted: 220 12% 20%;
+    --muted-foreground: 220 8% 60%;
+    --accent: 220 10% 25%;
+    --accent-foreground: 220 15% 92%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 220 15% 92%;
+    --border: 220 12% 22%;
+    --input: 220 12% 22%;
+    --ring: 220 10% 65%;
+
+    /* Vidro transparente - modo escuro */
+    --glass-bg: 220 15% 15%;
+    --glass-opacity: 0.6;
+    --glass-blur: 12px;
   }
   * {
     @apply border-border;
@@ -52,6 +63,10 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Zoom fixo em 90% */
+    zoom: 0.9;
+    -moz-transform: scale(0.9);
+    -moz-transform-origin: 0 0;
   }
   body {
     @apply bg-background text-foreground;
@@ -67,5 +82,43 @@
   }
   .custom-scroll::-webkit-scrollbar-thumb {
     @apply bg-border rounded-full;
+  }
+}
+
+@layer utilities {
+  /* Efeitos de Vidro Transparente (Glassmorphism) */
+  .glass {
+    background: hsl(var(--glass-bg) / var(--glass-opacity));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+
+  .glass-strong {
+    background: hsl(var(--glass-bg) / 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-light {
+    background: hsl(var(--glass-bg) / 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .glass-border {
+    border: 1px solid hsl(var(--border) / 0.3);
+  }
+
+  /* Utilitários Neumórficos */
+  .neomorph-card {
+    @apply rounded-2xl shadow-neomorph bg-card;
+  }
+
+  .neomorph-button {
+    @apply rounded-xl shadow-neomorph hover:shadow-neomorph-pressed active:shadow-neomorph-inset transition-all duration-150;
+  }
+
+  .neomorph-input {
+    @apply rounded-xl shadow-neomorph-inset bg-background/50 border-0;
   }
 }
