@@ -1,10 +1,9 @@
 /**
- * Wrangler config for the Cloudflare Durable Object template
- * STRICTLY DO NOT MODIFY THIS FILE - Hidden from AI to prevent breaking core functionality
+ * Wrangler config for HealthOS Dashboard
  */
- {
+{
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "auradash-lphrwgdnhl1es93ck7x90",
+	"name": "healthos-dashboard",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-04-24",
 	"assets": {
@@ -13,5 +12,31 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"r2_buckets": [
+		{
+			"binding": "MEDICAL_FILES",
+			"bucket_name": "medscribe"
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "TERMINAL_SESSION",
+				"class_name": "TerminalSession",
+				"script_name": "healthos-dashboard"
+			},
+			{
+				"name": "AGENT_EXECUTOR",
+				"class_name": "AgentExecutor",
+				"script_name": "healthos-dashboard"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_classes": ["TerminalSession", "AgentExecutor"]
+		}
+	]
 }
