@@ -43,13 +43,15 @@ export const mockAppointments = [
 ];
 export const generateAiResponse = (userInput: string): { content: string; uiComponent?: GenUIComponent } => {
   const lowerInput = userInput.toLowerCase();
+
+  // === Padrão 1: Busca de Pacientes ===
   const patientMatch = lowerInput.match(/paciente (\d+)/);
   if (patientMatch && patientMatch[1]) {
     const patientId = parseInt(patientMatch[1], 10);
     const patient = mockPatients.find(p => p.name.includes(patientId.toString()));
     if (patient) {
       return {
-        content: `Claro, aqui está um resumo para o ${patient.name}.`,
+        content: `✓ Encontrei o ${patient.name}. Aqui está o resumo completo com métricas atualizadas:`,
         uiComponent: {
           type: 'patient_summary',
           data: {
@@ -60,17 +62,26 @@ export const generateAiResponse = (userInput: string): { content: string; uiComp
             metrics: [
               { label: 'Transcrições', value: patient.transcriptions },
               { label: 'Análises ASL', value: patient.analyses },
+              { label: 'Status', value: patient.status },
             ],
           },
         },
       };
     } else {
-      return { content: `Paciente com ID ${patientId} não encontrado.` };
+      return { content: `⚠ Paciente com ID ${patientId} não encontrado no sistema. Verifique o ID e tente novamente.` };
     }
   }
-  if (lowerInput.includes('plano de ação') || lowerInput.includes('recomendações')) {
+
+  // === Padrão 2: Listagem de Pacientes ===
+  if (lowerInput.includes('listar') || lowerInput.includes('lista') || lowerInput.includes('todos os pacientes')) {
+    const summary = mockPatients.map(p => `• ${p.name} [${p.status}] - ${p.lastUpdate}`).join('\n');
+    return { content: `📋 Pacientes cadastrados no sistema:\n\n${summary}\n\nDigite "paciente [ID]" para ver detalhes de um paciente específico.` };
+  }
+
+  // === Padrão 3: Planos de Ação ===
+  if (lowerInput.includes('plano') || lowerInput.includes('recomendações') || lowerInput.includes('próximos passos')) {
     return {
-      content: "Com base na última análise, gerei o seguinte plano de ação para o Paciente 1001:",
+      content: "✓ Plano de ação gerado com base na última análise ASL. Aqui estão as recomendações prioritárias:",
       uiComponent: {
         type: 'action_plan',
         data: {
@@ -79,32 +90,96 @@ export const generateAiResponse = (userInput: string): { content: string; uiComp
             { id: '1', description: 'Agendar sessão de acompanhamento', completed: false },
             { id: '2', description: 'Revisar resultados da análise dimensional', completed: true },
             { id: '3', description: 'Preparar relatório para o paciente', completed: false },
+            { id: '4', description: 'Acompanhar evolução das métricas afetivas', completed: false },
           ],
         },
       },
     };
   }
-  if (lowerInput.includes('vitais') || lowerInput.includes('histórico')) {
+
+  // === Padrão 4: Histórico e Gráficos ===
+  if (lowerInput.includes('vitais') || lowerInput.includes('histórico') || lowerInput.includes('gráfico') || lowerInput.includes('engajamento')) {
     return {
-      content: "Aqui está o histórico de engajamento do Paciente 1003 nas últimas semanas:",
+      content: "📊 Gráfico de engajamento semanal gerado. Os dados mostram uma tendência positiva nas últimas semanas:",
       uiComponent: {
         type: 'vitals_chart',
         data: {
           title: 'Engajamento Semanal',
           data: [
-            { name: 'Semana 1', value: 65 },
-            { name: 'Semana 2', value: 70 },
-            { name: 'Semana 3', value: 85 },
-            { name: 'Semana 4', value: 80 },
+            { name: 'Sem 1', value: 65 },
+            { name: 'Sem 2', value: 70 },
+            { name: 'Sem 3', value: 85 },
+            { name: 'Sem 4', value: 80 },
+            { name: 'Sem 5', value: 90 },
           ],
         },
       },
     };
   }
-  if (lowerInput.includes('ajuda') || lowerInput.includes('comandos')) {
-    return { content: "Comandos disponíveis:\n- `paciente [ID]`: Mostra um resumo de um paciente (ex: `paciente 1001`).\n- `plano de ação`: Gera um plano de ação de exemplo.\n- `histórico de vitais`: Mostra um gráfico de exemplo." };
+
+  // === Padrão 5: Status do Sistema ===
+  if (lowerInput.includes('status') || lowerInput.includes('sistema') || lowerInput.includes('agentes')) {
+    const onlineAgents = mockAgents.filter(a => a.status === 'online').length;
+    const totalAgents = mockAgents.length;
+    return {
+      content: `🟢 Sistema operacional.\n\n**Agentes:** ${onlineAgents}/${totalAgents} online\n**Pacientes ativos:** ${mockPatients.filter(p => p.status === 'ATIVO').length}\n**Última sincronização:** Há 2 minutos\n\nTodos os serviços principais estão funcionando normalmente.`
+    };
   }
-  return { content: "Desculpe, não entendi o comando. Digite `ajuda` para ver uma lista de comandos que eu conheço." };
+
+  // === Padrão 6: Análise ASL ===
+  if (lowerInput.includes('asl') || lowerInput.includes('análise') || lowerInput.includes('dimensões')) {
+    return {
+      content: "🧠 A Análise Sistêmica Linguística (ASL) extrai 15 dimensões do espaço mental:\n\n**Afetiva:** Emoções, sentimentos, estado emocional\n**Cognitiva:** Raciocínio, memória, atenção\n**Linguística:** Padrões de fala, vocabulário, coerência\n\nGostaria de iniciar uma nova análise? Digite 'plano de ação' para ver recomendações."
+    };
+  }
+
+  // === Padrão 7: Agendamentos ===
+  if (lowerInput.includes('agenda') || lowerInput.includes('consultas') || lowerInput.includes('próximas sessões')) {
+    const todayAppointments = mockAppointments.filter(a => a.date === 'Hoje');
+    const summary = todayAppointments.map(a => `• ${a.patient} às ${a.time}`).join('\n');
+    return {
+      content: `📅 Consultas agendadas para hoje:\n\n${summary}\n\nTotal de ${mockAppointments.length} consultas esta semana.`
+    };
+  }
+
+  // === Padrão 8: Busca Semântica Avançada ===
+  if (lowerInput.includes('como') || lowerInput.includes('o que é') || lowerInput.includes('explique')) {
+    return {
+      content: "💡 Posso ajudar com informações sobre:\n\n• **Pacientes** - Digite 'paciente [ID]' ou 'listar pacientes'\n• **Análises** - Digite 'análise ASL' ou 'dimensões'\n• **Agendamentos** - Digite 'agenda' ou 'consultas'\n• **Gráficos** - Digite 'histórico' ou 'gráfico'\n• **Sistema** - Digite 'status' ou 'agentes'\n\nO que você gostaria de saber?"
+    };
+  }
+
+  // === Padrão 9: Comandos de Ajuda ===
+  if (lowerInput.includes('ajuda') || lowerInput.includes('help') || lowerInput.includes('comandos')) {
+    return {
+      content: "🤖 **HealthOS GenAI Assistant - Comandos Disponíveis:**\n\n" +
+               "**Pacientes:**\n" +
+               "• `paciente [ID]` - Ver detalhes (ex: paciente 1001)\n" +
+               "• `listar pacientes` - Mostrar todos os pacientes\n\n" +
+               "**Análises:**\n" +
+               "• `plano de ação` - Gerar recomendações\n" +
+               "• `análise ASL` - Info sobre análise linguística\n\n" +
+               "**Visualizações:**\n" +
+               "• `histórico` - Gráfico de engajamento\n" +
+               "• `agenda` - Ver consultas agendadas\n\n" +
+               "**Sistema:**\n" +
+               "• `status` - Status dos agentes\n" +
+               "• `ajuda` - Mostrar esta mensagem"
+    };
+  }
+
+  // === Resposta Padrão Inteligente ===
+  const suggestions = [
+    "Tente 'paciente 1001' para ver um resumo",
+    "Digite 'listar pacientes' para ver todos",
+    "Use 'plano de ação' para recomendações",
+    "Pergunte 'status' para ver o sistema",
+  ];
+  const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+
+  return {
+    content: `🤔 Não encontrei um comando específico para "${userInput}".\n\n💡 Sugestão: ${randomSuggestion}\n\nDigite "ajuda" para ver todos os comandos disponíveis.`
+  };
 };
 export const mockFiles = [
   { id: '1', name: 'Paciente 1001', type: 'folder', size: '--', lastModified: '2024-05-20 09:00 AM' },
